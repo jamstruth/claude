@@ -10,25 +10,36 @@ cdef float inv_180 = np.pi/180
 cdef float inv_90 = np.pi/90
 cdef DTYPE_f sigma = 5.67E-8
 
-# define various useful differential functions:
-# gradient of scalar field a in the local x direction at point i,j,k
-# dx = Array representing the Distance between each point on the X Plane
+"""
+define various useful differential functions:
+"""
 
 cpdef scalar_gradient_x(np.ndarray a, np.ndarray dx, np.int_t nlon, np.int_t i, np.int_t j, np.int_t k):
-	# Coord 
+	"""
+	gradient of scalar field a in the local x direction at point i,j,k
+	a = 3D array of values
+	dx = Array representing the Distance between each point on the X Plane along the Y plane
+	nlon = number of points in longitude direction
+	"""
 	coord_after_target = a[i,(j+1)%nlon,k]
 	coord_before_target = a[i,(j-1)%nlon,k]
 	return (coord_after_target-coord_before_target)/(dx[i])
 
 cpdef scalar_gradient_x_matrix(np.ndarray a,np.ndarray dx):
+	"""
+	gradient of scalar field a in local x direction at all points in matrix
+	a = 3D Array representing our Scalar Field
+	dx = Array representing the Distance between each point on the X Plane along the Y plane
+	"""
 	cdef np.ndarray output = (np.roll(a, -1, axis=1) - np.roll(a, 1, axis=1)) / dx[:, None, None]
 	return output
 
-###
-# a = 3D Array representing our Scalar Field
-# dx = Array representing the Distance between each point on the X Plane
-###
 cpdef scalar_gradient_x_matrix_primitive(np.ndarray a,np.ndarray dx):
+	"""
+	gradient of scalar field a in local X direction at all points in matrix
+	a = 3D Array representing our Scalar Field
+	dx = Array representing the Distance between each point on the X Plane along the Y plane
+	"""
 	cdef np.ndarray output = np.zeros_like(a)
 	cdef np.int_t i,j,k
 	for i in range(a.shape[0]):
@@ -36,7 +47,8 @@ cpdef scalar_gradient_x_matrix_primitive(np.ndarray a,np.ndarray dx):
 			for k in range(a.shape[2]):
 				output[i,j,k] = scalar_gradient_x(a=a,dx=dx,nlon=a.shape[1],i=i,j=j,k=k)
 
-	output[0,:,:] *= 0
+	# Culls Top and Bottom Y Coord data from output
+	output[0,:,:] *= 0 
 	output[-1,:,:] *= 0
 	return output
 
