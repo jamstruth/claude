@@ -435,3 +435,5 @@ claude_*_level_library.c
 
 # Pycharm Project Files
 .idea/
+# VSCode Settings
+.vscode/
