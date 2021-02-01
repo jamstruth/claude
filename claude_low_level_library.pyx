@@ -17,10 +17,7 @@ cdef DTYPE_f sigma = 5.67E-8
 cpdef scalar_gradient_x(np.ndarray a, np.ndarray dx, np.int_t nlon, np.int_t i, np.int_t j, np.int_t k):
 	# Coord 
 	coord_after_target = a[i,(j+1)%nlon,k]
-	print(coord_after_target)
 	coord_before_target = a[i,(j-1)%nlon,k]
-	print(coord_before_target)
-	print(dx[i])
 	return (coord_after_target-coord_before_target)/(dx[i])
 
 cpdef scalar_gradient_x_matrix(np.ndarray a,np.ndarray dx):
