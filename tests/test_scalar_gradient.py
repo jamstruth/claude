@@ -108,33 +108,94 @@ class ScalarGradientTests(unittest.TestCase):
         # Assert
         self.assertEqual(expected_result, result)
 
-    def test_scalar_gradient_x_matrix_basic_3d_array(self):
-        a = np.array([[[3,0], [4,0], [7,0]],
-                      [[7,0], [6,0], [2,0]],
-                      [[8,0], [8,0], [8,0]]])
+    def test_scalar_gradient_x_matrix(self):
+        a = np.array([[[3, 0], [4, 0], [7, 0]],
+                      [[7, 0], [6, 0], [2, 0]],
+                      [[8, 0], [8, 0], [8, 0]]])
         dx = np.array([1, 0.5, 2])
 
-        expected_results = np.array([[[-3,0], [4,0], [-1,0]],
-                                     [[8,0], [-10,0], [2,0]],
-                                     [[0,0], [0,0], [0,0]]])
+        expected_results = np.array([[[-3, 0], [4, 0], [-1, 0]],
+                                     [[8, 0], [-10, 0], [2, 0]],
+                                     [[0, 0], [0, 0], [0, 0]]])
 
         results = low_level.scalar_gradient_x_matrix(a, dx)
 
-        self.assertTrue(np.array_equal(expected_results, results), msg=f"expected: {expected_results}, actual: {results}")
+        self.assertTrue(np.array_equal(expected_results, results),
+                        msg=f"expected: {expected_results}, actual: {results}")
 
     def test_scalar_gradient_x_matrix_primitive(self):
-        a = np.array([[[3.0,0], [4,0], [7,0]],
-                      [[7,0], [6,0], [2,0]],
-                      [[3,0], [4,0], [7,0]],
-                      [[8,0], [8,0], [8,0]]])
+        a = np.array([[[3.0, 0], [4, 0], [7, 0]],
+                      [[7, 0], [6, 0], [2, 0]],
+                      [[3, 0], [4, 0], [7, 0]],
+                      [[8, 0], [8, 0], [8, 0]]])
         dx = np.array([1, 0.5, 2, 1])
 
-        expected_results = np.array([[[0,0], [0,0], [0,0]],
-                                     [[8,0], [-10,0], [2,0]],
-                                     [[-1.5,0], [2,0], [-0.5,0]],
-                                     [[0,0], [0,0], [0,0]]])
+        expected_results = np.array([[[0, 0], [0, 0], [0, 0]],
+                                     [[8, 0], [-10, 0], [2, 0]],
+                                     [[-1.5, 0], [2, 0], [-0.5, 0]],
+                                     [[0, 0], [0, 0], [0, 0]]])
 
         results = low_level.scalar_gradient_x_matrix_primitive(a, dx)
 
-        self.assertTrue(np.array_equal(expected_results, results), msg=f"expected: {expected_results}, actual: {results}")
+        self.assertTrue(np.array_equal(expected_results, results),
+                        msg=f"expected: {expected_results}, actual: {results}")
 
+    def test_scalar_gradient_y_matrix_dy_one(self):
+        dy = 1.0
+        a = np.array([[[3.0, 0], [4, 0], [7, 0]],
+                      [[7, 0], [6, 0], [2, 0]],
+                      [[3, 0], [4, 0], [7, 0]],
+                      [[8, 0], [8, 0], [8, 0]]])
+        
+        expected_results = np.array([[[8.0, 0], [4, 0], [-10, 0]],
+                                     [[0, 0], [0, 0], [0, 0]],
+                                     [[1, 0], [2, 0], [6, 0]],
+                                     [[10, 0], [8, 0], [2, 0]]])
+        results = low_level.scalar_gradient_y_matrix(a, dy)
+        self.assertTrue(np.array_equal(expected_results, results),
+                        msg=f"expected: {expected_results}, actual: {results}")
+
+    def test_scalar_gradient_y_matrix_dy_two(self):
+        dy = 2.0
+        a = np.array([[[3.0, 0], [4, 0], [7, 0]],
+                      [[7, 0], [6, 0], [2, 0]],
+                      [[3, 0], [4, 0], [7, 0]],
+                      [[8, 0], [8, 0], [8, 0]]])
+        
+        expected_results = np.array([[[4.0, 0], [2, 0], [-5, 0]],
+                                     [[0, 0], [0, 0], [0, 0]],
+                                     [[0.5, 0], [1, 0], [3, 0]],
+                                     [[5, 0], [4, 0], [1, 0]]])
+        results = low_level.scalar_gradient_y_matrix(a, dy)
+        self.assertTrue(np.array_equal(expected_results, results),
+                        msg=f"expected: {expected_results}, actual: {results}")
+
+    def test_scalar_gradient_y_matrix_primitive_dy_one(self):
+        dy = 1.0
+        a = np.array([[[3.0, 0], [4, 0], [7, 0]],
+                      [[7, 0], [6, 0], [2, 0]],
+                      [[3, 0], [4, 0], [7, 0]],
+                      [[8, 0], [8, 0], [8, 0]]])
+        
+        expected_results = np.array([[[8.0, 0], [4, 0], [-10, 0]],
+                                     [[0, 0], [0, 0], [0, 0]],
+                                     [[1, 0], [2, 0], [6, 0]],
+                                     [[10, 0], [8, 0], [2, 0]]])
+        results = low_level.scalar_gradient_y_matrix(a, dy)
+        self.assertTrue(np.array_equal(expected_results, results),
+                        msg=f"expected: {expected_results}, actual: {results}")
+
+    def test_scalar_gradient_y_matrix_primitive_dy_two(self):
+        dy = 2.0
+        a = np.array([[[3.0, 0], [4, 0], [7, 0]],
+                      [[7, 0], [6, 0], [2, 0]],
+                      [[3, 0], [4, 0], [7, 0]],
+                      [[8, 0], [8, 0], [8, 0]]])
+        
+        expected_results = np.array([[[4.0, 0], [2, 0], [-5, 0]],
+                                     [[0, 0], [0, 0], [0, 0]],
+                                     [[0.5, 0], [1, 0], [3, 0]],
+                                     [[5, 0], [4, 0], [1, 0]]])
+        results = low_level.scalar_gradient_y_matrix(a, dy)
+        self.assertTrue(np.array_equal(expected_results, results),
+                        msg=f"expected: {expected_results}, actual: {results}")
