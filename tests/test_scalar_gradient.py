@@ -199,3 +199,52 @@ class ScalarGradientTests(unittest.TestCase):
         results = low_level.scalar_gradient_y_matrix_primitive(a, dy)
         self.assertTrue(np.array_equal(expected_results, results),
                         msg=f"expected: {expected_results}, actual: {results}")
+
+    def test_scalar_gradient_y_2D_dy_one(self):
+        dy = 1.0
+        a = np.array([[3.0, 4, 7],
+                      [7, 6, 2],
+                      [3, 4, 7],
+                      [8, 8, 8]])
+
+        coord_one = [0,0]
+        coord_two = [1,1]
+        coord_three = [3,3]
+
+        expected_result_one = 8
+        expected_result_two = 0
+        expected_result_three = 2
+
+        result_one = low_level.scalar_gradient_y_2D(a, dy, a.shape[0], coord_one[0], coord_one[1])
+        result_two = low_level.scalar_gradient_y_2D(a, dy, a.shape[0], coord_two[0], coord_two[1])
+        result_three = low_level.scalar_gradient_y_2D(a, dy, a.shape[0], coord_three[0], coord_three[1])
+
+
+        self.assertEqual(expected_result_one, result_one)
+        self.assertEqual(expected_result_two, result_two)
+        self.assertEqual(expected_result_three, result_three)
+
+    def test_scalar_gradient_y_2D_dy_two(self):
+        dy = 2.0
+        a = np.array([[3.0, 4, 7],
+                      [7, 6, 2],
+                      [3, 4, 7],
+                      [8, 8, 8]])
+
+        coord_one = [0,0]
+        coord_two = [1,1]
+        coord_three = [3,3]
+
+        expected_result_one = 4
+        expected_result_two = 0
+        expected_result_three = 1
+        
+        result_one = low_level.scalar_gradient_y_2D(a, dy, a.shape[0], coord_one[0], coord_one[1])
+        result_two = low_level.scalar_gradient_y_2D(a, dy, a.shape[0], coord_two[0], coord_two[1])
+        result_three = low_level.scalar_gradient_y_2D(a, dy, a.shape[0], coord_three[0], coord_three[1])
+
+
+        self.assertEqual(expected_result_one, result_one)
+        self.assertEqual(expected_result_two, result_two)
+        self.assertEqual(expected_result_three, result_three)
+
